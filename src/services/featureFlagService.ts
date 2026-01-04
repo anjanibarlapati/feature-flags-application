@@ -1,4 +1,6 @@
 import { FeatureFlag } from '../models/FeatureFlag.ts';
+import { FeatureFlagUserOverride } from '../models/FeatureFlagUserOverride.ts';
+import { FeatureFlagGroupOverride } from '../models/FeatureFlagGroupOverride.ts';
 
 export class FeatureFlagService {
   static async createFeatureFlag({ name, enabled, description }: { name: string; enabled: boolean; description?: string }) {
@@ -19,5 +21,23 @@ export class FeatureFlagService {
 
   static async getFeatureFlagByName(name: string) {
     return FeatureFlag.findOne({ where: { name }, attributes: ['name', 'enabled'] });
+  }
+
+  static async evaluateFeatureFlag(name: string, userId?: string, groupId?: string) {
+    
+    const feature = await FeatureFlag.findOne({ where: { name } });
+    if (!feature) throw new Error('Feature flag not found.');
+
+    if (userId) {
+      const userOverride = await FeatureFlagUserOverride.findOne({ where: { featureFlagId: feature.id, userId } });
+      if (userOverride) return { name: feature.name, enabled: userOverride.enabled, context: 'user' };
+    }
+
+    if (groupId) {
+      const groupOverride = await FeatureFlagGroupOverride.findOne({ where: { featureFlagId: feature.id, groupId } });
+      if (groupOverride) return { name: feature.name, enabled: groupOverride.enabled, context: 'group' };
+    }
+
+    return { name: feature.name, enabled: feature.enabled, context: 'global' };
   }
 }

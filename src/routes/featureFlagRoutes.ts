@@ -9,4 +9,6 @@ router.get('/feature-flags', FeatureFlagController.getAllFeatureFlags);
 
 router.get('/feature-flags/:name', FeatureFlagController.getFeatureFlagByName);
 
+router.get('/feature-flags/:name/evaluate', FeatureFlagController.evaluateFeatureFlag);
+
 export default router;

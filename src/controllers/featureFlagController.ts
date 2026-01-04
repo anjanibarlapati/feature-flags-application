@@ -39,4 +39,22 @@ export class FeatureFlagController {
       return res.status(500).json({ error: error.message });
     }
   }
+
+  static async evaluateFeatureFlag(req: Request, res: Response) {
+    try {
+      const { name } = req.params;
+      const { userId, groupId } = req.query;
+      if (typeof name !== 'string') {
+        return res.status(400).json({ error: 'Feature flag name is required.' });
+      }
+      const result = await FeatureFlagService.evaluateFeatureFlag(
+        name,
+        typeof userId === 'string' ? userId : undefined,
+        typeof groupId === 'string' ? groupId : undefined
+      );
+      return res.json(result);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
 }
