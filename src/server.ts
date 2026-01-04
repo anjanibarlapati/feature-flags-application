@@ -2,10 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import { initializeDatabase } from './initializeDatabase.ts';
 
 dotenv.config();
 
-console.log("Starting server...");
 
 export const app = express();
 const port = process.env.APP_PORT || 9876;
@@ -18,6 +18,7 @@ app.use(express.json());
 
 async function startServer() {
     try {
+        await initializeDatabase();
         app.listen(port, () => {
             console.log(`Server running at http://localhost:${port}`);
         });
