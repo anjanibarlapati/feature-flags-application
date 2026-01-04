@@ -46,5 +46,11 @@ FeatureFlagGroupOverride.init(
     sequelize,
     modelName: 'FeatureFlagGroupOverride',
     tableName: 'feature_flag_group_overrides',
+    indexes: [
+      {
+        unique: true,
+        fields: ['featureFlagId', 'groupId'],
+      },
+    ],
   }
 );

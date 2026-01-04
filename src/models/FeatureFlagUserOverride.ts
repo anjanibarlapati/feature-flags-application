@@ -46,5 +46,11 @@ FeatureFlagUserOverride.init(
     sequelize,
     modelName: 'FeatureFlagUserOverride',
     tableName: 'feature_flag_user_overrides',
+    indexes: [
+      {
+        unique: true,
+        fields: ['featureFlagId', 'userId'],
+      },
+    ],
   }
 );

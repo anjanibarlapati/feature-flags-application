@@ -67,13 +67,21 @@ export class FeatureFlagService {
     const flag = await FeatureFlag.findOne({ where: { name } });
     if (!flag) throw new Error('Feature flag not found.');
     const count = await FeatureFlagUserOverride.destroy({ where: { featureFlagId: flag.id, userId } });
-    return count > 0;
+    if (count > 0) {
+      return { success: true, message: 'User override removed.' };
+    } else {
+      return { success: false, message: 'No user override found to remove.' };
+    }
   }
 
   static async removeGroupOverride(name: string, groupId: string) {
     const flag = await FeatureFlag.findOne({ where: { name } });
     if (!flag) throw new Error('Feature flag not found.');
     const count = await FeatureFlagGroupOverride.destroy({ where: { featureFlagId: flag.id, groupId } });
-    return count > 0;
+     if (count > 0) {
+      return { success: true, message: 'Group override removed.' };
+    } else {
+      return { success: false, message: 'No group override found to remove.' };
+    }
   }
 }
