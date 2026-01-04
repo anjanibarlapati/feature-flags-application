@@ -48,4 +48,32 @@ export class FeatureFlagService {
     await flag.save();
     return flag;
   }
+
+  static async upsertUserOverride(name: string, userId: string, enabled: boolean) {
+    const flag = await FeatureFlag.findOne({ where: { name } });
+    if (!flag) throw new Error('Feature flag not found.');
+    const [override] = await FeatureFlagUserOverride.upsert({ featureFlagId: flag.id, userId, enabled });
+    return override;
+  }
+
+  static async upsertGroupOverride(name: string, groupId: string, enabled: boolean) {
+    const flag = await FeatureFlag.findOne({ where: { name } });
+    if (!flag) throw new Error('Feature flag not found.');
+    const [override] = await FeatureFlagGroupOverride.upsert({ featureFlagId: flag.id, groupId, enabled });
+    return override;
+  }
+
+  static async removeUserOverride(name: string, userId: string) {
+    const flag = await FeatureFlag.findOne({ where: { name } });
+    if (!flag) throw new Error('Feature flag not found.');
+    const count = await FeatureFlagUserOverride.destroy({ where: { featureFlagId: flag.id, userId } });
+    return count > 0;
+  }
+
+  static async removeGroupOverride(name: string, groupId: string) {
+    const flag = await FeatureFlag.findOne({ where: { name } });
+    if (!flag) throw new Error('Feature flag not found.');
+    const count = await FeatureFlagGroupOverride.destroy({ where: { featureFlagId: flag.id, groupId } });
+    return count > 0;
+  }
 }

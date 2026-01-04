@@ -71,4 +71,60 @@ export class FeatureFlagController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  static async upsertUserOverride(req: Request, res: Response) {
+    try {
+      const { name } = req.params;
+      const { userId, enabled } = req.body;
+      if (typeof name !== 'string' || typeof userId !== 'string' || typeof enabled !== 'boolean') {
+        return res.status(400).json({ error: 'Feature flag name (string), userId (string), and enabled (boolean) are required.' });
+      }
+      const override = await FeatureFlagService.upsertUserOverride(name, userId, enabled);
+      return res.json(override);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  static async upsertGroupOverride(req: Request, res: Response) {
+    try {
+      const { name } = req.params;
+      const { groupId, enabled } = req.body;
+      if (typeof name !== 'string' || typeof groupId !== 'string' || typeof enabled !== 'boolean') {
+        return res.status(400).json({ error: 'Feature flag name (string), groupId (string), and enabled (boolean) are required.' });
+      }
+      const override = await FeatureFlagService.upsertGroupOverride(name, groupId, enabled);
+      return res.json(override);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  static async removeUserOverride(req: Request, res: Response) {
+    try {
+      const { name } = req.params;
+      const { userId } = req.body;
+      if (typeof name !== 'string' || typeof userId !== 'string') {
+        return res.status(400).json({ error: 'Feature flag name (string) and userId (string) are required.' });
+      }
+      const removed = await FeatureFlagService.removeUserOverride(name, userId);
+      return res.json({ removed });
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  static async removeGroupOverride(req: Request, res: Response) {
+    try {
+      const { name } = req.params;
+      const { groupId } = req.body;
+      if (typeof name !== 'string' || typeof groupId !== 'string') {
+        return res.status(400).json({ error: 'Feature flag name (string) and groupId (string) are required.' });
+      }
+      const removed = await FeatureFlagService.removeGroupOverride(name, groupId);
+      return res.json({ removed });
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
 }
