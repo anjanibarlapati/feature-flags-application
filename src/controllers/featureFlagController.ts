@@ -57,4 +57,18 @@ export class FeatureFlagController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  static async updateFeatureFlagState(req: Request, res: Response) {
+    try {
+      const { name } = req.params;
+      const { enabled } = req.body;
+      if (typeof name !== 'string' || typeof enabled !== 'boolean') {
+        return res.status(400).json({ error: 'Feature flag name (string) and enabled (boolean) are required.' });
+      }
+      const flag = await FeatureFlagService.updateFeatureFlagState(name, enabled);
+      return res.json(flag);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
 }

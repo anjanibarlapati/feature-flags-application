@@ -40,4 +40,12 @@ export class FeatureFlagService {
 
     return { name: feature.name, enabled: feature.enabled, context: 'global' };
   }
+
+  static async updateFeatureFlagState(name: string, enabled: boolean) {
+    const flag = await FeatureFlag.findOne({ where: { name } });
+    if (!flag) throw new Error('Feature flag not found.');
+    flag.enabled = enabled;
+    await flag.save();
+    return flag;
+  }
 }

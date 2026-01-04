@@ -11,4 +11,7 @@ router.get('/feature-flags/:name', FeatureFlagController.getFeatureFlagByName);
 
 router.get('/feature-flags/:name/evaluate', FeatureFlagController.evaluateFeatureFlag);
 
+// Update global enabled state
+router.patch('/feature-flags/:name', FeatureFlagController.updateFeatureFlagState);
+
 export default router;
