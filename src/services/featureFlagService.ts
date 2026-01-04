@@ -14,7 +14,10 @@ export class FeatureFlagService {
   }
 
   static async getAllFeatureFlags() {
-    return FeatureFlag.findAll();
+    return FeatureFlag.findAll({ attributes: ['name', 'enabled'] });
   }
 
+  static async getFeatureFlagByName(name: string) {
+    return FeatureFlag.findOne({ where: { name }, attributes: ['name', 'enabled'] });
+  }
 }

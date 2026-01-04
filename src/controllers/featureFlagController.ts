@@ -24,5 +24,19 @@ export class FeatureFlagController {
     }
   }
 
-
+  static async getFeatureFlagByName(req: Request, res: Response) {
+    try {
+      const { name } = req.params;
+      if (typeof name !== 'string') {
+        return res.status(400).json({ error: 'Feature flag name is required.' });
+      }
+      const flag = await FeatureFlagService.getFeatureFlagByName(name);
+      if (!flag) {
+        return res.status(404).json({ error: 'Feature flag not found.' });
+      }
+      return res.json(flag);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
 }
