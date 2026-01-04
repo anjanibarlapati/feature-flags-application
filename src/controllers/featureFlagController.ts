@@ -14,4 +14,15 @@ export class FeatureFlagController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  static async getAllFeatureFlags(_req: Request, res: Response) {
+    try {
+      const flags = await FeatureFlagService.getAllFeatureFlags();
+      return res.json(flags);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+
 }

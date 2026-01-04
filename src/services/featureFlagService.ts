@@ -12,4 +12,9 @@ export class FeatureFlagService {
     }
     return FeatureFlag.create(createObj);
   }
+
+  static async getAllFeatureFlags() {
+    return FeatureFlag.findAll();
+  }
+
 }
